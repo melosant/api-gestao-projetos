@@ -138,9 +138,12 @@ public class TaskService {
         return new TaskResponseDTO(
                 entity.getId(),
                 entity.getProject().getId(),
+                entity.getProject().getTitle(),
                 entity.getTitle(),
                 entity.getDescription(),
-                entity.getStatus()
+                entity.getStatus(),
+                entity.getUpdatedAt(),
+                entity.getCreatedAt()
         );
     }
 }

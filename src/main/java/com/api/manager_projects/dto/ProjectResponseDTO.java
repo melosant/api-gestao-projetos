@@ -2,6 +2,7 @@ package com.api.manager_projects.dto;
 
 import com.api.manager_projects.enums.ProjectStatus;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 public record ProjectResponseDTO(
@@ -9,6 +10,8 @@ public record ProjectResponseDTO(
         UUID createdBy,
         String title,
         String description,
-        ProjectStatus status
+        ProjectStatus status,
+        LocalDateTime updatedAt,
+        LocalDateTime createdAt
 ) {
 }

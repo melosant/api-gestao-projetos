@@ -95,7 +95,9 @@ public class ProjectService {
                 entity.getUser().getId(),
                 entity.getTitle(),
                 entity.getDescription(),
-                entity.getStatus()
+                entity.getStatus(),
+                entity.getUpdatedAt(),
+                entity.getCreatedAt()
         );
     }
 }
