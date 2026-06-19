@@ -41,6 +41,22 @@ public class ProjectService {
         return projectRepository.findAll().stream().map(this::toResponseDto).toList();
     }
 
+    @Transactional(readOnly = true)
+    public List<ProjectResponseDTO> getAllProjectsByUser(UUID userId) {
+        return projectRepository.findByUserId(userId)
+                .stream()
+                .map(this::toResponseDto)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public ProjectResponseDTO getProjectById(UUID projectId) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new RuntimeException("Projeto não encontrado!"));
+
+        return toResponseDto(project);
+    }
+
     @Transactional
     public ProjectResponseDTO updateProject(UUID projectId, ProjectRequestDTO dto) {
         Project project = projectRepository.findById(projectId)

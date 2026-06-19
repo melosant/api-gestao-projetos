@@ -29,6 +29,18 @@ public class ProjectController {
         return ResponseEntity.ok(projectsSearched);
     }
 
+    @GetMapping("/board/{userId}")
+    public ResponseEntity<List<ProjectResponseDTO>> getAllProjectsByUser(@PathVariable UUID userId) {
+        List<ProjectResponseDTO> projectsSearched = projectService.getAllProjectsByUser(userId);
+        return ResponseEntity.ok(projectsSearched);
+    }
+
+    @GetMapping("/project/{projectId}")
+    public ResponseEntity<ProjectResponseDTO> getProjectById(@PathVariable UUID projectId) {
+        ProjectResponseDTO projectSearched = projectService.getProjectById(projectId);
+        return ResponseEntity.ok(projectSearched);
+    }
+
     @PutMapping("/project/{projectId}")
     public ResponseEntity<ProjectResponseDTO> updateProject(@PathVariable UUID projectId,
                                                             @RequestBody ProjectRequestDTO dto) {
