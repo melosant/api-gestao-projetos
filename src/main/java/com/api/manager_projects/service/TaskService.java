@@ -2,14 +2,18 @@ package com.api.manager_projects.service;
 
 import com.api.manager_projects.dto.TaskRequestDTO;
 import com.api.manager_projects.dto.TaskResponseDTO;
+import com.api.manager_projects.entity.AuditTask;
 import com.api.manager_projects.entity.Project;
 import com.api.manager_projects.entity.Task;
+import com.api.manager_projects.enums.TaskStatus;
+import com.api.manager_projects.repository.AuditTaskRepository;
 import com.api.manager_projects.repository.ProjectRepository;
 import com.api.manager_projects.repository.TaskRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,6 +21,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class TaskService {
     private final TaskRepository taskRepository;
+    private final AuditTaskRepository auditTaskRepository;
     private final ProjectRepository projectRepository;
 
     @Transactional
@@ -33,12 +38,51 @@ public class TaskService {
 
         Task taskSaved = taskRepository.save(task);
 
+        AuditTask auditTask = AuditTask.builder()
+                .user(project.getUser())
+                .task(taskSaved)
+                .build();
+
+        auditTaskRepository.save(auditTask);
+
         return toResponseDTO(taskSaved);
     }
 
     @Transactional(readOnly = true)
     public List<TaskResponseDTO> getAllTasks() {
         return taskRepository.findAll().stream().map(this::toResponseDTO).toList();
+    }
+
+    @Transactional
+    public TaskResponseDTO updateTaskStatusToStarted(UUID taskId) {
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new RuntimeException("Tarefa não encontrada!"));
+        AuditTask auditTask = auditTaskRepository.findByTaskId(taskId)
+                .orElseThrow(() -> new RuntimeException("Auditoria de Tarefa não encontrada!"));
+
+        auditTask.setStartTime(LocalDateTime.now());
+        task.setStatus(TaskStatus.STARTED);
+
+        auditTaskRepository.save(auditTask);
+        Task taskUpdated = taskRepository.save(task);
+
+        return toResponseDTO(taskUpdated);
+    }
+
+    @Transactional
+    public TaskResponseDTO updateTaskStatusToDone(UUID taskId) {
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new RuntimeException("Tarefa não encontrada!"));
+        AuditTask auditTask = auditTaskRepository.findByTaskId(taskId)
+                .orElseThrow(() -> new RuntimeException("Auditoria de Tarefa não encontrada!"));
+
+        auditTask.setEndTime(LocalDateTime.now());
+        task.setStatus(TaskStatus.DONE);
+
+        auditTaskRepository.save(auditTask);
+        Task taskUpdated = taskRepository.save(task);
+
+        return toResponseDTO(taskUpdated);
     }
 
     @Transactional
@@ -59,7 +103,10 @@ public class TaskService {
     public void deleteTask(UUID taskId) {
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new RuntimeException("Tarefa não encontrada!"));
+        AuditTask auditTask = auditTaskRepository.findByTaskId(taskId)
+                .orElseThrow(() -> new RuntimeException("Auditoria de Tarefa não encontrada!"));
 
+        auditTaskRepository.delete(auditTask);
         taskRepository.delete(task);
     }
 

@@ -29,6 +29,18 @@ public class TaskController {
         return ResponseEntity.ok(tasksSearched);
     }
 
+    @PatchMapping("/task/{taskId}/start")
+    public ResponseEntity<TaskResponseDTO> updateStatusTaskToStarted(@PathVariable UUID taskId) {
+        TaskResponseDTO taskUpdated = taskService.updateTaskStatusToStarted(taskId);
+        return ResponseEntity.ok(taskUpdated);
+    }
+
+    @PatchMapping("/task/{taskId}/done")
+    public ResponseEntity<TaskResponseDTO> updateStatusTaskToDone(@PathVariable UUID taskId) {
+        TaskResponseDTO taskUpdated = taskService.updateTaskStatusToDone(taskId);
+        return ResponseEntity.ok(taskUpdated);
+    }
+
     @PutMapping("/{taskId}")
     public ResponseEntity<TaskResponseDTO> updateTask(@PathVariable UUID taskId,
                                                       @RequestBody TaskRequestDTO dto) {
