@@ -29,6 +29,24 @@ public class TaskController {
         return ResponseEntity.ok(tasksSearched);
     }
 
+    @GetMapping("/board/{userId}")
+    public ResponseEntity<List<TaskResponseDTO>> getAllTasksByUser(@PathVariable UUID userId) {
+        List<TaskResponseDTO> tasksSearched = taskService.getAllTasksByUserId(userId);
+        return ResponseEntity.ok(tasksSearched);
+    }
+
+    @GetMapping("/task/{taskId}")
+    public ResponseEntity<TaskResponseDTO> getTaskByTaskId(@PathVariable UUID taskId) {
+        TaskResponseDTO taskSearched = taskService.getTaskByTaskId(taskId);
+        return ResponseEntity.ok(taskSearched);
+    }
+
+    @GetMapping("/project/{projectId}")
+    public ResponseEntity<List<TaskResponseDTO>> getTasksByProjectId(@PathVariable UUID projectId) {
+        List<TaskResponseDTO> tasksSearched = taskService.getTasksByProjectId(projectId);
+        return ResponseEntity.ok(tasksSearched);
+    }
+
     @PatchMapping("/task/{taskId}/start")
     public ResponseEntity<TaskResponseDTO> updateStatusTaskToStarted(@PathVariable UUID taskId) {
         TaskResponseDTO taskUpdated = taskService.updateTaskStatusToStarted(taskId);

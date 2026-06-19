@@ -53,6 +53,30 @@ public class TaskService {
         return taskRepository.findAll().stream().map(this::toResponseDTO).toList();
     }
 
+    @Transactional(readOnly = true)
+    public List<TaskResponseDTO> getAllTasksByUserId(UUID userId) {
+        return taskRepository.findByUserId(userId)
+                .stream()
+                .map(this::toResponseDTO)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public TaskResponseDTO getTaskByTaskId(UUID taskId) {
+        Task task = taskRepository.findById(taskId).
+                orElseThrow(() -> new RuntimeException("Tarefa não encontrada!"));
+
+        return toResponseDTO(task);
+    }
+
+    @Transactional(readOnly = true)
+    public List<TaskResponseDTO> getTasksByProjectId(UUID projectId) {
+        return taskRepository.findByProjectId(projectId)
+                .stream()
+                .map(this::toResponseDTO)
+                .toList();
+    }
+
     @Transactional
     public TaskResponseDTO updateTaskStatusToStarted(UUID taskId) {
         Task task = taskRepository.findById(taskId)
