@@ -2,9 +2,13 @@ package com.api.manager_projects.service;
 
 import com.api.manager_projects.dto.ProjectRequestDTO;
 import com.api.manager_projects.dto.ProjectResponseDTO;
+import com.api.manager_projects.entity.AuditTask;
 import com.api.manager_projects.entity.Project;
+import com.api.manager_projects.entity.Task;
 import com.api.manager_projects.entity.User;
+import com.api.manager_projects.repository.AuditTaskRepository;
 import com.api.manager_projects.repository.ProjectRepository;
+import com.api.manager_projects.repository.TaskRepository;
 import com.api.manager_projects.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +22,8 @@ import java.util.UUID;
 public class ProjectService {
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
+    private final TaskRepository taskRepository;
+    private final AuditTaskRepository auditTaskRepository;
 
     @Transactional
     public ProjectResponseDTO createProject(ProjectRequestDTO dto) {
@@ -75,7 +81,11 @@ public class ProjectService {
     public void deleteProject(UUID projectId) {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new RuntimeException("Projeto não encontrado!"));
+        List<Task> tasksSearched = taskRepository.findByProjectId(projectId);
+        List<AuditTask> auditsTasksSearched = auditTaskRepository.findByProjectId(projectId);
 
+        auditTaskRepository.deleteAll(auditsTasksSearched);
+        taskRepository.deleteAll(tasksSearched);
         projectRepository.delete(project);
     }
 
