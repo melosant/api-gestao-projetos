@@ -29,14 +29,14 @@ public class UserController {
         return ResponseEntity.ok(usersSearched);
     }
 
-    @PatchMapping("/{id}")
+    @PatchMapping("/user/{id}")
     public ResponseEntity<UserResponseDTO> updateUser(@PathVariable UUID id,
                                                       @RequestBody UserRequestDTO dto) {
         UserResponseDTO userUpdated = userService.updateUser(id, dto);
         return ResponseEntity.ok(userUpdated);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/user/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable UUID id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();

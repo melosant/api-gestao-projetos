@@ -29,14 +29,14 @@ public class ProjectController {
         return ResponseEntity.ok(projectsSearched);
     }
 
-    @PutMapping("/{projectId}")
+    @PutMapping("/project/{projectId}")
     public ResponseEntity<ProjectResponseDTO> updateProject(@PathVariable UUID projectId,
                                                             @RequestBody ProjectRequestDTO dto) {
         ProjectResponseDTO responseDTO = projectService.updateProject(projectId, dto);
         return ResponseEntity.ok(responseDTO);
     }
 
-    @DeleteMapping("/{projectId}")
+    @DeleteMapping("/project/{projectId}")
     public ResponseEntity<Void> deleteProject(@PathVariable UUID projectId) {
         projectService.deleteProject(projectId);
         return ResponseEntity.noContent().build();
