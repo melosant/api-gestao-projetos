@@ -1,14 +1,15 @@
 package com.api.manager_projects.dto;
 
 import com.api.manager_projects.enums.ProjectStatus;
+import com.api.manager_projects.enums.TaskStatus;
 
 import java.util.UUID;
 
-public record ProjectResponseDTO(
+public record TaskResponseDTO(
         UUID id,
-        UUID createdBy,
+        UUID projectId,
         String title,
         String description,
-        ProjectStatus status
+        TaskStatus status
 ) {
 }
